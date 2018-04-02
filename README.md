@@ -16,10 +16,11 @@ Chaque ligne de données (LD) contient différents champs, séparés par un poin
 Ces différents champs au sein d'une LD peuvent être de nature différentes (nombre, chaîne de caractères).
 - _crepeScript.txt_ : c'est lui qui va aller chercher l'information dans le premier fichier.
 Ensuite, l'information est traitée et affichée. Par la suite se sont ajoutées différentes fonctionnalités.
-- _versions.txt_ : il contient une liste de toutes les versions de CRÊPE, avec des détails sur les ajouts, retraits et modifications des fonctionnalités, ainsi que les correctifs.
+- _versions.txt_ : il contient une liste de toutes les versions de CRÊPE à ce jour, avec des détails sur les ajouts, retraits et modifications des fonctionnalités, ainsi que les correctifs.
+- _README.md_ : le fichier que vous êtes actuellement en train de lire, cela va de soi...
 - _LICENSE_ : un fichier de la _Free Software Foundation_ expliquant la licence GNU GPL v3
 
-Afin de démarrer correctement le système CRÊPE, il vous est recommandé de rendre exécutable le fichier _crepeScript.sh_ avec la commande `chmod +x crepeScript.sh`, puis de démarrer CRÊPE avec la commande `./crepeScript.sh`.
+Afin de démarrer correctement le système CRÊPE, il vous est recommandé de rendre exécutable, si ce n'est déjà fait, le fichier _crepeScript.sh_ avec la commande `chmod +x crepeScript.sh`, puis de démarrer CRÊPE avec la commande `./crepeScript.sh`.
 
 -----------------------------------------------------------------------------------------------
 ### Contacts :
