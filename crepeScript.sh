@@ -61,6 +61,9 @@ enSurligne='\033[7m' ;
 definitionCouleur ;
 
 
+filenameBD="crepeBD.txt"				#Stockage fichier crepeBD.txt dans une variable (!= en dur)
+
+
 
 
 
@@ -70,7 +73,7 @@ definitionCouleur ;
 
 nbLignesEntrees() {					#Calcul du nombre de lignes exploitables dans la BD pour le système d'affichage
 
-nbLignesBD=$(wc -l crepeBD.txt | cut -d ' ' -f 1)	#Nombre de lignes dans la BD
+nbLignesBD=$(wc -l $filenameBD | cut -d ' ' -f 1)	#Nombre de lignes dans la BD
 nbLignesBDReel=$(($nbLignesBD-3))			#Nombre de lignes exploitables dans la BD
 
 }
@@ -99,7 +102,7 @@ calculNbPages() {						#Calcul du nombre de pages affichables à partir du nombr
 								#et du nombre de lignes à afficher (division euclidienne)
 nbLignesRencontrees=0 ;
 
-for (( a=1 ; a<$nbLignesBDReel+1 ; a++ )) do			#On fait une boucle for qui va compter le nombre de lignes.
+for (( a=1 ; a<=$nbLignesBDReel ; a++ )) do			#On fait une boucle for qui va compter le nombre de lignes.
 	
 	nbLignesRencontrees=$(($nbLignesRencontrees+1)) ;	#À chaque fois que l'on arrive à 15 lignes, on augmente le nombre
 								#de pages de 1, puis on reset la variable dans laquelle on a
@@ -243,17 +246,17 @@ tput cup 1 0 ; echo -e "${fgBlanc}${bgViolet}Infos développeur :${enDefaut} nbL
 
 header ;						#Appel de l'header contenant les noms des données, pour affichage
 
-for (( y=4 ; y<$(($nbLignesAffichees+1+4)) ; y++ ))
+for (( y=4 ; y<=$(($nbLignesAffichees+4)) ; y++ ))
 do	#Rafraîchissement de la zone d'affichage des données
 tput cup $y 5 ; echo -e "                                                                                                    "
 done
 
-for (( a=1 ; a<$(($nbLignesAffichees+1)) ; a++ )) do
-	tput cup $(($a+3)) 5  ; echo $(grep -iG '^l'$(($a+$varDefilement))x crepeBD.txt | cut -d \; -f 4)
-	tput cup $(($a+3)) 24 ; echo $(grep -iG '^l'$(($a+$varDefilement))x crepeBD.txt | cut -d \; -f 3)
-	tput cup $(($a+3)) 50 ; echo $(grep -iG '^l'$(($a+$varDefilement))x crepeBD.txt | cut -d \; -f 2)
-	tput cup $(($a+3)) 66 ; echo $(grep -iG '^l'$(($a+$varDefilement))x crepeBD.txt | cut -d \; -f 5)
-	tput cup $(($a+3)) 81 ; echo $(grep -iG '^l'$(($a+$varDefilement))x crepeBD.txt | cut -d \; -f 6)
+for (( a=1 ; a<=$(($nbLignesAffichees)) ; a++ )) do
+	tput cup $(($a+3)) 5  ; echo $(grep -iG '^l'$(($a+$varDefilement))x $filenameBD | cut -d \; -f 4)
+	tput cup $(($a+3)) 24 ; echo $(grep -iG '^l'$(($a+$varDefilement))x $filenameBD | cut -d \; -f 3)
+	tput cup $(($a+3)) 50 ; echo $(grep -iG '^l'$(($a+$varDefilement))x $filenameBD | cut -d \; -f 2)
+	tput cup $(($a+3)) 66 ; echo $(grep -iG '^l'$(($a+$varDefilement))x $filenameBD | cut -d \; -f 5)
+	tput cup $(($a+3)) 81 ; echo $(grep -iG '^l'$(($a+$varDefilement))x $filenameBD | cut -d \; -f 6)
 	tput cup 20 0 ;
 done
 
