@@ -21,7 +21,7 @@
 ##############################  PARTIE 1 : PARAMÉTRAGE NON-IMPORTANTS	########################################
 #####Ces paramétrages ne jouent pas un grand rôle dans le script (pas d'opérations)
 
-function initFenetre() {				#Dimensionnage fenêtre + effaçage
+initFenetre() {						#Dimensionnage fenêtre + effaçage
 
 resize -s 35 120
 clear
@@ -30,7 +30,7 @@ clear
 
 initFenetre ;
 
-function definitionCouleur() {				#Fonction pour faciliter la colorisation dans le script
+definitionCouleur() {					#Fonction pour faciliter la colorisation dans le script
 							#à l'aide de variables contenant les "code-couleurs"
 enDefaut='\033[0m' ;
 
@@ -68,16 +68,16 @@ definitionCouleur ;
 #####Ce sont les paramétrages liés à une partie dynamique du programme (affichage, défilement des lignes/pages)
 #####Ces paramétrages sont très liés aux fonctions mais contrairement aux fonctions périphériques, on n'y revient pas dessus.
 
-function nbLignesEntrees() {			#Calcul du nombre de lignes exploitables dans la BD pour le système d'affichage
+nbLignesEntrees() {					#Calcul du nombre de lignes exploitables dans la BD pour le système d'affichage
 
-nbLignesBD=`wc -l bdEnt.txt | cut -d ' ' -f 1`		#Nombre de lignes dans la BD
+nbLignesBD=$(wc -l crepeBD.txt | cut -d ' ' -f 1)	#Nombre de lignes dans la BD
 nbLignesBDReel=$(($nbLignesBD-3))			#Nombre de lignes exploitables dans la BD
 
 }
 
 nbLignesEntrees ;
 
-function initVarDefilementEtNbLignesAffichees() {	#Paramétrages du système de défilement des données dans le système de l'affichage
+initVarDefilementEtNbLignesAffichees() {		#Paramétrages du système de défilement des données dans le système de l'affichage
 
 varDefilement=0	;					#Sert au fonctionnement du défilement (décalage des données affichées)
 
@@ -87,15 +87,15 @@ nbLignesAffichees=15 ;					#Nombre de lignes à afficher par page dans l'affiche
 
 initVarDefilementEtNbLignesAffichees ;
 	
-function modeAffichage() {
+modeAffichage() {
 
-modeAffichage=0 ;				#Définit le mode d'affichage de la BD (cf. explications.txt)
+modeAffichage=0 ;					#Définit le mode d'affichage de la BD  /!\ Pas encore implémenté /!\
 
 }
 
 modeAffichage ;
 
-function calculNbPages() {					#Calcul du nombre de pages affichables à partir du nombre d'entrées
+calculNbPages() {						#Calcul du nombre de pages affichables à partir du nombre d'entrées
 								#et du nombre de lignes à afficher (division euclidienne)
 nbLignesRencontrees=0 ;
 
@@ -127,9 +127,9 @@ calculNbPages ;
 #####Le concept d'éloignement est très imagé, il s'agit ici d'une partie effectuant des opérations difficiles à appréhender
 #####Pour cette partie, un commentaire est situé au début de chaque fonction pour rappeler à quelles fonctions elles sont rattachées
 
-function defilement() {
+defilement() {							#Fonction activable depuis le menu : défile les lignes de données
 	
-	function PageGauche() {					#Va décrémenter varDefilement de 15 et aura pour effet d'afficher
+	PageGauche() {						#Va décrémenter varDefilement de 15 et aura pour effet d'afficher
 								#les 15 lignes suivantes (cf. fonction affichage)
 	varDefilement=$(($varDefilement-$nbLignesAffichees))
 	if	[ $varDefilement -lt '0' ]
@@ -140,7 +140,7 @@ function defilement() {
 	
 	}
 	
-	function PageDroite() {					#Va incrémenter varDefilement de 15 et aura pour effet d'afficher
+	PageDroite() {						#Va incrémenter varDefilement de 15 et aura pour effet d'afficher
 								#les 15 lignes suivantes (cf. fonction affichage)
 	varDefilement=$(($varDefilement+$nbLignesAffichees))
 	if	[ $varDefilement -gt $(($nbLignesBDReel+1-$nbLignesAffichees)) ]
@@ -160,11 +160,7 @@ function defilement() {
 	
 }
 
-
-r
-
-
-function modifDynamiqueNbLignesAffichees() {		#Reconnaissance page pleine/partiellement vide
+modifDynamiqueNbLignesAffichees() {			#Reconnaissance page pleine/partiellement vide
 
 pageActuelle=$(($varDefilement/15+1))			#Recherche de la page actuelle afin de réaliser l'opération ci-dessous
 							#Modification du nombre de lignes à afficher lorsqu'il y a besoin
@@ -184,7 +180,7 @@ reste=$(($nbLignesBDReel%15))				#d'afficher le reste des lignes d'entrées fais
 #####Ici se trouve le centre du programme comprenant toutes les fonctions que l'utilisateur pourra rencontrer en surface.
 #####Bien plus appréhendables, ce sont elles que l'utilisateur peut voir en action (affichage, appui touche menu, ...)
 
-function getToucheMenuFiltrage() {			#Gestion de la touche appuyée lors de fnctn selectionModeAffichage()
+getToucheMenuFiltrage() {				#Gestion de la touche appuyée lors de fnctn selectionModeAffichage()
 	
 	escape_char=$(printf "\u1b")
 	read -rsn1 mode # get 1 character
@@ -208,7 +204,7 @@ function getToucheMenuFiltrage() {			#Gestion de la touche appuyée lors de fnct
 	
 }
 
-function header() {					#Affichage de l'en-tête de la BD
+header() {						#Affichage de l'en-tête de la BD
 	
 tput cup 2 5  ; echo -e "${bgBlanc}${fgNoir}NUM. COMMANDE${enDefaut}"
 tput cup 2 24 ; echo -e "${bgBlanc}${fgNoir}NOM CLIENT${enDefaut}"
@@ -218,13 +214,13 @@ tput cup 2 81 ; echo -e "${bgBlanc}${fgNoir}ARTICLES${enDefaut}"
 	
 }
 
-function bottom() {					#Affichage du bas de page de la BD (entre les entrées et le menu)
+bottom() {						#Affichage du bas de page de la BD (entre les entrées et le menu)
 
 tput cup 20 5 ; echo -e "${fgVert}[-] Changer de page [+]${enDefaut}          Page actuelle : $(($varDefilement/15+1)) / $nbPagesBD"
 
 }
 
-function menuSelectionModeAffichage() {			#Menu pour choisir le mode d'affichage
+menuSelectionModeAffichage() {				#Menu pour choisir le mode d'affichage
 
 tput cup 22 0   ; echo -e "                                                                "
 tput cup 25 5   ; echo "                                                           "
@@ -237,7 +233,7 @@ getToucheMenuFiltrage ;
 
 }
 
-function affichage() {					#Affichage de l'intégralité des infos que l'utilisateur doit voir
+affichage() {						#Affichage de l'intégralité des infos que l'utilisateur doit voir
 
 modifDynamiqueNbLignesAffichees ;			#Appel à la fonction de calcul de nbLignesAffichees
 
@@ -253,11 +249,11 @@ tput cup $y 5 ; echo -e "                                                       
 done
 
 for (( a=1 ; a<$(($nbLignesAffichees+1)) ; a++ )) do
-	tput cup $(($a+3)) 5  ; echo `grep -iG '^l'$(($a+$varDefilement))x bdEnt.txt | cut -d \; -f 4`
-	tput cup $(($a+3)) 24 ; grep -iG '^l'$(($a+$varDefilement))x bdEnt.txt | cut -d \; -f 3
-	tput cup $(($a+3)) 50 ; echo `grep -iG '^l'$(($a+$varDefilement))x bdEnt.txt | cut -d \; -f 2`
-	tput cup $(($a+3)) 66 ; grep -iG '^l'$(($a+$varDefilement))x bdEnt.txt | cut -d \; -f 5
-	tput cup $(($a+3)) 81 ; grep -iG '^l'$(($a+$varDefilement))x bdEnt.txt | cut -d \; -f 6
+	tput cup $(($a+3)) 5  ; echo $(grep -iG '^l'$(($a+$varDefilement))x crepeBD.txt | cut -d \; -f 4)
+	tput cup $(($a+3)) 24 ; echo $(grep -iG '^l'$(($a+$varDefilement))x crepeBD.txt | cut -d \; -f 3)
+	tput cup $(($a+3)) 50 ; echo $(grep -iG '^l'$(($a+$varDefilement))x crepeBD.txt | cut -d \; -f 2)
+	tput cup $(($a+3)) 66 ; echo $(grep -iG '^l'$(($a+$varDefilement))x crepeBD.txt | cut -d \; -f 5)
+	tput cup $(($a+3)) 81 ; echo $(grep -iG '^l'$(($a+$varDefilement))x crepeBD.txt | cut -d \; -f 6)
 	tput cup 20 0 ;
 done
 
