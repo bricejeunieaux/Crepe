@@ -39,6 +39,7 @@ v0.1.0.0 :	Paramétrages bidons (entête script)
 v0.2.0.0 :	Paramétrages non-importants : initFenêtre
 v0.3.0.0 :	Paramétrages non-importants : definitionCouleurs
 v0.4.0.0 :	Paramétrages importants : nbLignesEntrees
+v0.4.0.5 :	+ Refonte du système de recherche du nombre de ligne : parsage de 'crepeBD.txt' en développement
 v0.5.1.0 :	Paramétrages importants : Affichage header
 v0.5.2.0 :	Paramétrages importants : Affichage bottom
 v0.5.3.0 :	Paramétrages importants : Affichage menu affichage
