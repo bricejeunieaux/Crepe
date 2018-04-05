@@ -71,14 +71,13 @@ filenameBD="crepeBD.txt"				#Stockage fichier crepeBD.txt dans une variable (!= 
 #####Ce sont les paramétrages liés à une partie dynamique du programme (affichage, défilement des lignes/pages)
 #####Ces paramétrages sont très liés aux fonctions mais contrairement aux fonctions périphériques, on n'y revient pas dessus.
 
-nbLignesEntrees() {					#Calcul du nombre de lignes exploitables dans la BD pour le système d'affichage
+nbLignesDonnees() {					#Calcul du nombre de lignes exploitables dans la BD pour le système d'affichage
 
-nbLignesBD=$(wc -l $filenameBD | cut -d ' ' -f 1)	#Nombre de lignes dans la BD
-nbLignesBDReel=$(($nbLignesBD-3))			#Nombre de lignes exploitables dans la BD
+nbLignesBD=$(grep -iG '^l[0-9]\{1,\}x' $filenameBD | wc -l)		#Nombre de lignes exploitables dans la BD
 
 }
 
-nbLignesEntrees ;
+nbLignesDonnees ;
 
 initVarDefilementEtNbLignesAffichees() {		#Paramétrages du système de défilement des données dans le système de l'affichage
 
@@ -102,7 +101,7 @@ calculNbPages() {						#Calcul du nombre de pages affichables à partir du nombr
 								#et du nombre de lignes à afficher (division euclidienne)
 nbLignesRencontrees=0 ;
 
-for (( a=1 ; a<=$nbLignesBDReel ; a++ )) do			#On fait une boucle for qui va compter le nombre de lignes.
+for (( a=1 ; a<=$nbLignesBD ; a++ )) do			#On fait une boucle for qui va compter le nombre de lignes.
 	
 	nbLignesRencontrees=$(($nbLignesRencontrees+1)) ;	#À chaque fois que l'on arrive à 15 lignes, on augmente le nombre
 								#de pages de 1, puis on reset la variable dans laquelle on a
@@ -146,8 +145,8 @@ defilement() {							#Fonction activable depuis le menu : défile les lignes de 
 	PageDroite() {						#Va incrémenter varDefilement de 15 et aura pour effet d'afficher
 								#les 15 lignes suivantes (cf. fonction affichage)
 	varDefilement=$(($varDefilement+$nbLignesAffichees))
-	if	[ $varDefilement -gt $(($nbLignesBDReel+1-$nbLignesAffichees)) ]
-	then	varDefilement=$(($nbLignesBDReel-$nbLignesAffichees))
+	if	[ $varDefilement -gt $(($nbLignesBD+1-$nbLignesAffichees)) ]
+	then	varDefilement=$(($nbLignesBD-$nbLignesAffichees))
 	fi
 	
 	affichage ;
@@ -167,7 +166,7 @@ modifDynamiqueNbLignesAffichees() {			#Reconnaissance page pleine/partiellement 
 
 pageActuelle=$(($varDefilement/15+1))			#Recherche de la page actuelle afin de réaliser l'opération ci-dessous
 							#Modification du nombre de lignes à afficher lorsqu'il y a besoin
-reste=$(($nbLignesBDReel%15))				#d'afficher le reste des lignes d'entrées faisant moins d'une page
+reste=$(($nbLignesBD%15))				#d'afficher le reste des lignes d'entrées faisant moins d'une page
 
 #if	[ $pageActuelle -eq $nbPages ] && [ $reste -ne 0 ]
 #then	nbLignesAffichees=$reste			#Reste des lignes d'entrées faisant moins d'une page (affect. var.)
@@ -240,7 +239,7 @@ affichage() {						#Affichage de l'intégralité des infos que l'utilisateur doi
 
 modifDynamiqueNbLignesAffichees ;			#Appel à la fonction de calcul de nbLignesAffichees
 
-tput cup 0 0 ; echo -e "${fgBlanc}${bgViolet}Infos développeur :${enDefaut} nbLignesBDReel = $nbLignesBDReel ; nbLignesAffichees = $nbLignesAffichees ; varDefilement = $varDefilement ; reste = $reste "
+tput cup 0 0 ; echo -e "${fgBlanc}${bgViolet}Infos développeur :${enDefaut} nbLignesBD = $nbLignesBD ; nbLignesAffichees = $nbLignesAffichees ; varDefilement = $varDefilement ; reste = $reste "
 
 tput cup 1 0 ; echo -e "${fgBlanc}${bgViolet}Infos développeur :${enDefaut} nbLignesRencontrees = $nbLignesRencontrees ; nbPages = $nbPagesBD Page actuelle = $pageActuelle "
 
