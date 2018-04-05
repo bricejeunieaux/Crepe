@@ -11,7 +11,7 @@ Mon esprit est naturellement parti sur l'idée de concevoir une base de données
 
 -----------------------------------------------------------------------------------------------
 ### Explication sur les fichiers :
-- _crepeBD.txt_ : il contient toutes les données, organisées en lignes.
+- _crepeBD.txt_ : un simple CSV contenant toutes les données.
 Chaque ligne de données (LD) contient différents champs, séparés par un point-virgule.
 Ces différents champs au sein d'une LD peuvent être de nature différentes (nombre, chaîne de caractères).
 - _crepeScript.txt_ : c'est lui qui va aller chercher l'information dans le premier fichier.
