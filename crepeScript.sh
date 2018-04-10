@@ -10,7 +10,7 @@
 #                                     		     #	#                                     		     #
 ######################################################	######################################################
 
-#Auteur du projet source : Jeunieaux Brice	-	JeunieauxBrice@hotmail.fr	brice_jeunieaux@member.fsf.org (Pidgin)
+#Auteur du projet source : Jeunieaux Brice	-	JeunieauxBrice@hotmail.fr	brice_jeunieaux@member.fsf.org (XMPP/Pidgin)
 #Github du projet	 : https://github.com/bricejeunieaux/databaseCrepe
 #Licence GNU GPL v3	 : https://www.gnu.org/licenses/quick-guide-gplv3.fr.html
 
@@ -73,7 +73,7 @@ filenameBD="crepeBD.txt"				#Stockage fichier crepeBD.txt dans une variable (!= 
 
 nbLignesDonnees() {					#Calcul du nombre de lignes exploitables dans la BD pour le système d'affichage
 
-nbLignesBD=$(grep -iG '^l[0-9]\{1,\}x' $filenameBD | wc -l)		#Nombre de lignes exploitables dans la BD
+nbLignesBD=$(grep -iG '^l[0-9]\{1,\}x' $filenameBD | wc -l)	#Nombre de lignes exploitables dans la BD
 
 }
 
@@ -114,7 +114,7 @@ done
 
 if	[ $(($nbLignesRencontrees%15)) -gt 0 ]			#À la fin du comptage, on récupère le reste du modulo
 then	nbPagesBD=$(($nbPagesBD+1))				#S'il est positif, cela veut dire qu'il y aura une page non-remplie.
-	nbLignesRencontrees=0 ;					#On ajoute donc une page pour pouvoir afficher ces données.
+	#nbLignesRencontrees=0 ;					#On ajoute donc une page pour pouvoir afficher ces données.
 fi
 
 }
@@ -128,6 +128,8 @@ calculNbPages ;
 ##############################  PARTIE 3 : PARTIE "ÉLOIGNÉE" DU CENTRE DU PROGRAMME	########################################
 #####Le concept d'éloignement est très imagé, il s'agit ici d'une partie effectuant des opérations difficiles à appréhender
 #####Pour cette partie, un commentaire est situé au début de chaque fonction pour rappeler à quelles fonctions elles sont rattachées
+#####
+#####Ces fonctions sont appelées de une à plusieurs fois au cours du programme : ainsi, elles sont essentielles à son fonctionnement
 
 defilement() {							#Fonction activable depuis le menu : défile les lignes de données
 	
@@ -245,17 +247,16 @@ tput cup 1 0 ; echo -e "${fgBlanc}${bgViolet}Infos développeur :${enDefaut} nbL
 
 header ;						#Appel de l'header contenant les noms des données, pour affichage
 
-for (( y=4 ; y<=$(($nbLignesAffichees+4)) ; y++ ))
-do	#Rafraîchissement de la zone d'affichage des données
-tput cup $y 5 ; echo -e "                                                                                                    "
+for (( y=4 ; y<=$(($nbLignesAffichees+4)) ; y++ )) do	#Rafraîchissement de la zone d'affichage des données
+	tput cup $y 5 ; echo -e "                                                                                                    "
 done
 
 for (( a=1 ; a<=$(($nbLignesAffichees)) ; a++ )) do
-	tput cup $(($a+3)) 5  ; echo $(grep -iG '^l'$(($a+$varDefilement))x $filenameBD | cut -d \; -f 4)
-	tput cup $(($a+3)) 24 ; echo $(grep -iG '^l'$(($a+$varDefilement))x $filenameBD | cut -d \; -f 3)
-	tput cup $(($a+3)) 50 ; echo $(grep -iG '^l'$(($a+$varDefilement))x $filenameBD | cut -d \; -f 2)
-	tput cup $(($a+3)) 66 ; echo $(grep -iG '^l'$(($a+$varDefilement))x $filenameBD | cut -d \; -f 5)
-	tput cup $(($a+3)) 81 ; echo $(grep -iG '^l'$(($a+$varDefilement))x $filenameBD | cut -d \; -f 6)
+	tput cup $(($a+3)) 5  ; echo $(grep -G '^l'$(($a+$varDefilement))x $filenameBD | cut -d \; -f 4)
+	tput cup $(($a+3)) 24 ; echo $(grep -G '^l'$(($a+$varDefilement))x $filenameBD | cut -d \; -f 3)
+	tput cup $(($a+3)) 50 ; echo $(grep -G '^l'$(($a+$varDefilement))x $filenameBD | cut -d \; -f 2)
+	tput cup $(($a+3)) 66 ; echo $(grep -G '^l'$(($a+$varDefilement))x $filenameBD | cut -d \; -f 5)
+	tput cup $(($a+3)) 81 ; echo $(grep -G '^l'$(($a+$varDefilement))x $filenameBD | cut -d \; -f 6)
 	tput cup 20 0 ;
 done
 
