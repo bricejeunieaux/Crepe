@@ -88,7 +88,7 @@ nbLignesAffichees=15 ;					#Nombre de lignes à afficher par page dans l'affiche
 }
 
 initVarDefilementEtNbLignesAffichees ;
-	
+
 modeAffichage() {
 
 modeAffichage=0 ;					#Définit le mode d'affichage de la BD  /!\ Pas encore implémenté /!\
@@ -102,14 +102,14 @@ calculNbPages() {						#Calcul du nombre de pages affichables à partir du nombr
 nbLignesRencontrees=0 ;
 
 for (( a=1 ; a<=$nbLignesBD ; a++ )) do			#On fait une boucle for qui va compter le nombre de lignes.
-	
+
 	nbLignesRencontrees=$(($nbLignesRencontrees+1)) ;	#À chaque fois que l'on arrive à 15 lignes, on augmente le nombre
 								#de pages de 1, puis on reset la variable dans laquelle on a
 	if	[ $(($nbLignesRencontrees%15)) -eq 0 ]		#mis le nombre de lignes rencontrées
 	then	nbPagesBD=$(($nbPagesBD+1))
 		nbLignesRencontrees=0 ;				#Cela permet de gérer une certaine situation lorsque le reste d'un
 	fi							#modulo sera non-nul (donc, une page ne comprenant pas 15 entrée)
-	
+
 done
 
 if	[ $(($nbLignesRencontrees%15)) -gt 0 ]			#À la fin du comptage, on récupère le reste du modulo
@@ -132,36 +132,36 @@ calculNbPages ;
 #####Ces fonctions sont appelées de une à plusieurs fois au cours du programme : ainsi, elles sont essentielles à son fonctionnement
 
 defilement() {							#Fonction activable depuis le menu : défile les lignes de données
-	
+
 	PageGauche() {						#Va décrémenter varDefilement de 15 et aura pour effet d'afficher
 								#les 15 lignes suivantes (cf. fonction affichage)
 	varDefilement=$(($varDefilement-$nbLignesAffichees))
 	if	[ $varDefilement -lt '0' ]
 	then	varDefilement=0
 	fi
-	
+
 	affichage ;
-	
+
 	}
-	
+
 	PageDroite() {						#Va incrémenter varDefilement de 15 et aura pour effet d'afficher
 								#les 15 lignes suivantes (cf. fonction affichage)
 	varDefilement=$(($varDefilement+$nbLignesAffichees))
 	if	[ $varDefilement -gt $(($nbLignesBD+1-$nbLignesAffichees)) ]
 	then	varDefilement=$(($nbLignesBD-$nbLignesAffichees))
 	fi
-	
+
 	affichage ;
-	
+
 	}
-	
+
 	if	[ $1 = "PageGauche" ] && [ $nbPagesBD -gt 1 ] && [ $pageActuelle -ne 1 ]
 	then	PageGauche ;
 	elif	[ $1 = "PageDroite" ] && [ $nbPagesBD -gt 1 ] && [ $pageActuelle -ne $nbPagesBD ]
 	then	PageDroite ;
 	else	getToucheMenuFiltrage ;
 	fi
-	
+
 }
 
 modifDynamiqueNbLignesAffichees() {			#Reconnaissance page pleine/partiellement vide
@@ -185,16 +185,16 @@ reste=$(($nbLignesBD%15))				#d'afficher le reste des lignes d'entrées faisant 
 #####Bien plus appréhendables, ce sont elles que l'utilisateur peut voir en action (affichage, appui touche menu, ...)
 
 getToucheMenuFiltrage() {				#Gestion de la touche appuyée lors de fnctn selectionModeAffichage()
-	
+
 	escape_char=$(printf "\u1b")
 	read -rsn1 mode # get 1 character
-	
+
 	if	[[ $mode == $escape_char ]]
 	then	read -rsn2 mode # read 2 more chars
 	fi
-	
+
 	case $mode in
-	
+
 		'q') resize -s 24 80 ; clear ; tput cup 0 0 ; exit ;;
 		'Q') resize -s 24 80 ; clear ; tput cup 0 0 ; exit ;;
 		'0') modeAffichage=0 ; affichage ;;
@@ -203,19 +203,19 @@ getToucheMenuFiltrage() {				#Gestion de la touche appuyée lors de fnctn select
 		#'1') modeAffichage=1 ; idClientVoulu=3 ; affichage ;;
 		#'2') modeAffichage=2 ; idClientVoulu=12 ; affichage ;;
 		*) >&2 getToucheMenuFiltrage ;;
-	
+
 	esac
-	
+
 }
 
 header() {						#Affichage de l'en-tête de la BD
-	
+
 tput cup 2 5  ; echo -e "${bgBlanc}${fgNoir}NUM. COMMANDE${enDefaut}"
 tput cup 2 24 ; echo -e "${bgBlanc}${fgNoir}NOM CLIENT${enDefaut}"
 tput cup 2 50 ; echo -e "${bgBlanc}${fgNoir}ID. CLIENT${enDefaut}"
 tput cup 2 66 ; echo -e "${bgBlanc}${fgNoir}QUANTITÉS${enDefaut}"
 tput cup 2 81 ; echo -e "${bgBlanc}${fgNoir}ARTICLES${enDefaut}"
-	
+
 }
 
 bottom() {						#Affichage du bas de page de la BD (entre les entrées et le menu)
@@ -267,4 +267,3 @@ menuSelectionModeAffichage ;
 }
 
 affichage ;
-

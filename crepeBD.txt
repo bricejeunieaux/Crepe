@@ -26,7 +26,7 @@ l22x;27;François-Xavier Benoit;21;4;Cerises;0
 l23x;21;Merik Kivetic;22;3;Pommes;0
 l24x;22;Hugues Ramelier;23;27;Fraises;0
 l25x;29;Corentin Dudestins;24;3;Haricots;0
-l26x;26;Avril O'Malley;25;6;Radis;0
+l26x;26;Avril O.Malley;25;6;Radis;0
 l27x;23;Désirée Malamont;26;1;Quetsches;0
 l28x;28;Jean Bavière;27;11;Mangues;0
 l29x;24;Nicolas Edouard;28;2;Poires;0
