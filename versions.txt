@@ -9,21 +9,21 @@ Nomenclature et fonctionnement :
   'Y' est une partie de code au sein d'une fonctionnalité (une fonctionnalité peut contenir plusieurs fonctions Bash).
   'Z' est le numéro de correctif, appliqué à une fonctionnalité.
   '/r' est une lettre décrivant une certaine situation, comme une sorte de message à l'utilisateur.
-  
+
   'W' : Lorsque une version officielle sortira, pour un meilleur confort de l'utilisateur, celle-ci aura un surnom
   (comme par exemple la combinaison 'adjectif+animal' pour les versions d'Ubuntu).
   La version actuelle est la version 0, et ne possède pas de nom.
   Le nom de la BD étant "CRÊPE", les noms des versions annoncées seront un certain type de crêpe (ex : au sucre pour la v2)
-  
+
   'X' : Une certaine fonctionnalité aura son propre digit dans le numéro de version.
   Ne pas confondre une fonctionnalité et une fonction du code ! La fonctionnalité peut être le système d'affichage,
   le système de menu, d'édition, etc...
-  
+
   'Y' : Une certaine partie du code (cette fois ci, une fonction dans le code, généralement).
   Ce chiffre n'est en rien révélateur de son importance, ou de sa place dans le code.
-  
+
   'Z' : Tout simplement un correctif appliqué à la fonction 'Y'.
-  
+
   '/r' : Un message envers l'utilisateur, comme par exemple :	'/i'  : instable
   								'/s'  : stable
 								'/d'  : en développement
@@ -39,7 +39,7 @@ v0.1.0.0 :	Paramétrages bidons (entête script)
 v0.2.0.0 :	Paramétrages non-importants : initFenêtre
 v0.3.0.0 :	Paramétrages non-importants : definitionCouleurs
 v0.4.0.0 :	Paramétrages importants : nbLignesEntrees
-v0.4.0.5 :	+ Refonte du système de recherche du nombre de ligne : reconnaissance plus "intelligente" des lignes de données
+v0.4.0.5 :	+ Refonte plus "intelligente" du système de recherche du nombre de lignes
 v0.5.1.0 :	Paramétrages importants : Affichage header
 v0.5.2.0 :	Paramétrages importants : Affichage bottom
 v0.5.3.0 :	Paramétrages importants : Affichage menu affichage
@@ -52,7 +52,8 @@ v0.7.4.0 :	Système de défilement des données : Application des variables
 v0.7.5.0 :	Système de défilement des données : Affichage en termes de pages de données
 v0.7.6.0 :	Système de défilement des données : Calcul de la page actuelle (que lit l'utilisateur)
 v0.7.7.0 :	Système de défilement des données : Stop défilement quand pages min ou max atteinte
+v0.7.7.1 :  + Correctif LD26 pour compatibilité du code de la v0.7.8.0
+
 v0.7.8.0/d :	Système de défilement des données : Gestion affichage du reste des lignes (nofullpage)
 
 -----------------------------------------------------------------------------------------------
-
