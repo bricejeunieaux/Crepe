@@ -6,7 +6,7 @@
 #	 | |    | |__) | |__  | |__) | |__   	     #	#                                     		     #
 #	 | |    |  _  /|  __| |  ___/|  __|  	     #	#     Prototype actuel codé en script Bash Linux     #
 #	 | |____| | \ \| |____| |    | |____ 	     #	#                                     		     #
-#	  \_____|_|  \_\______|_|    |______|	     #	#             Version uploadée : 0.7.7.0             #
+#	  \_____|_|  \_\______|_|    |______|	     #	#             Version uploadée : 0.7.0.0             #
 #                                     		     #	#                                     		     #
 ######################################################	######################################################
 
@@ -25,6 +25,8 @@ initFenetre() {						#Dimensionnage fenêtre + effaçage
 
 resize -s 35 120
 clear
+
+echo "PRÉPARATION DE LA BASE DE DONNÉES..."		#Simple message inutile pour combler les 2 secondes de chargement au début
 
 }
 
@@ -61,7 +63,7 @@ enSurligne='\033[7m' ;
 definitionCouleur ;
 
 
-filenameBD="crepeBD.txt"				#Stockage fichier crepeBD.txt dans une variable (!= en dur)
+filenameBD="crepeBD.txt"				#Stockage BD par défaut crepeBD.txt dans une variable (!= en dur)
 
 
 
@@ -79,29 +81,21 @@ nbLignesBD=$(grep -iG '^l[0-9]\{1,\}x' $filenameBD | wc -l)	#Nombre de lignes ex
 
 nbLignesDonnees ;
 
-initVarDefilementEtNbLignesAffichees() {		#Paramétrages du système de défilement des données dans le système de l'affichage
+initNbLignesAfficheesEtPageActuelle() {				#Paramétrages du système de défilement des données dans le système de l'affichage
 
-varDefilement=0	;					#Sert au fonctionnement du défilement (décalage des données affichées)
+nbLignesAffichees=15 ;						#Nombre de lignes à afficher par page dans l'afficheur
 
-nbLignesAffichees=15 ;					#Nombre de lignes à afficher par page dans l'afficheur
-
-}
-
-initVarDefilementEtNbLignesAffichees ;
-
-modeAffichage() {
-
-modeAffichage=0 ;					#Définit le mode d'affichage de la BD  /!\ Pas encore implémenté /!\
+pageActuelle=1 ;						#Page affichée au démarrage
 
 }
 
-modeAffichage ;
+initNbLignesAfficheesEtPageActuelle ;
 
 calculNbPages() {						#Calcul du nombre de pages affichables à partir du nombre d'entrées
 								#et du nombre de lignes à afficher (division euclidienne)
 nbLignesRencontrees=0 ;
 
-for (( a=1 ; a<=$nbLignesBD ; a++ )) do			#On fait une boucle for qui va compter le nombre de lignes.
+for (( a=1 ; a<=$nbLignesBD ; a++ )) do				#On fait une boucle for qui va compter le nombre de lignes.
 
 	nbLignesRencontrees=$(($nbLignesRencontrees+1)) ;	#À chaque fois que l'on arrive à 15 lignes, on augmente le nombre
 								#de pages de 1, puis on reset la variable dans laquelle on a
@@ -114,12 +108,20 @@ done
 
 if	[ $(($nbLignesRencontrees%15)) -gt 0 ]			#À la fin du comptage, on récupère le reste du modulo
 then	nbPagesBD=$(($nbPagesBD+1))				#S'il est positif, cela veut dire qu'il y aura une page non-remplie.
-	#nbLignesRencontrees=0 ;					#On ajoute donc une page pour pouvoir afficher ces données.
+	#nbLignesRencontrees=0 ;				#On ajoute donc une page pour pouvoir afficher ces données.
 fi
 
 }
 
 calculNbPages ;
+
+initTableauxLD() {						#Déclaration des tableaux contenants les données des LD.
+
+declare -A tab1 ;						#Tableau1 contenant les données du fichier .txt
+}
+
+initTableauxLD ;
+
 
 
 
@@ -131,50 +133,53 @@ calculNbPages ;
 #####
 #####Ces fonctions sont appelées de une à plusieurs fois au cours du programme : ainsi, elles sont essentielles à son fonctionnement
 
-defilement() {							#Fonction activable depuis le menu : défile les lignes de données
+defilement() {							#Fonction activable depuis le menu : défile les pages et en affiche les LD
 
-	PageGauche() {						#Va décrémenter varDefilement de 15 et aura pour effet d'afficher
-								#les 15 lignes suivantes (cf. fonction affichage)
-	varDefilement=$(($varDefilement-$nbLignesAffichees))
-	if	[ $varDefilement -lt '0' ]
-	then	varDefilement=0
+	PageGauche() {
+	
+	pageActuelle=$(($pageActuelle-1))
+	if	[ $pageActuelle -lt '1' ]
+	then	pageActuelle=1
 	fi
 
 	affichage ;
 
 	}
 
-	PageDroite() {						#Va incrémenter varDefilement de 15 et aura pour effet d'afficher
-								#les 15 lignes suivantes (cf. fonction affichage)
-	varDefilement=$(($varDefilement+$nbLignesAffichees))
-	if	[ $varDefilement -gt $(($nbLignesBD+1-$nbLignesAffichees)) ]
-	then	varDefilement=$(($nbLignesBD-$nbLignesAffichees))
+	PageDroite() {
+	
+	pageActuelle=$(($pageActuelle+1))
+	if	[ $pageActuelle -gt $nbPagesBD ]
+	then	pageActuelle=$nbPagesBD
 	fi
-
+	
 	affichage ;
-
+	
 	}
-
+	
 	if	[ $1 = "PageGauche" ] && [ $nbPagesBD -gt 1 ] && [ $pageActuelle -ne 1 ]
 	then	PageGauche ;
 	elif	[ $1 = "PageDroite" ] && [ $nbPagesBD -gt 1 ] && [ $pageActuelle -ne $nbPagesBD ]
 	then	PageDroite ;
 	else	getToucheMenuFiltrage ;
 	fi
-
+	
 }
 
-modifDynamiqueNbLignesAffichees() {			#Reconnaissance page pleine/partiellement vide
-
-pageActuelle=$(($varDefilement/15+1))			#Recherche de la page actuelle afin de réaliser l'opération ci-dessous
-							#Modification du nombre de lignes à afficher lorsqu'il y a besoin
-reste=$(($nbLignesBD%15))				#d'afficher le reste des lignes d'entrées faisant moins d'une page
-
-#if	[ $pageActuelle -eq $nbPages ] && [ $reste -ne 0 ]
-#then	nbLignesAffichees=$reste			#Reste des lignes d'entrées faisant moins d'une page (affect. var.)
-#fi
-
+traitementLDTab1() {
+	
+	for (( a=1 ; a<=$nbPagesBD ; a++ )) do
+		for (( b=$(($nbLignesAffichees*$(($a-1))+1)) ; b<=$(($nbLignesAffichees*$a)) ; b++ )) do
+			for (( c=2 ; c<=6 ; c++ )) do
+				tab2["Page$a,LD$b,Champ$c"]=$(grep -G '^l'$(($b))x crepeBD.txt | cut -d \; -f $c)
+  			done
+		done
+	done
+	
 }
+
+traitementLDTab1 ;
+
 
 
 
@@ -208,19 +213,25 @@ getToucheMenuFiltrage() {				#Gestion de la touche appuyée lors de fnctn select
 
 }
 
+affichageInfosDev() {
+
+tput cup 0 0 ; echo -e "${fgBlanc}${bgViolet}Infos développeur :${enDefaut} nbLignesBD = $nbLignesBD ; nbLignesAffichees = $nbLignesAffichees ; nbPages = $nbPagesBD Page actuelle = $pageActuelle ; nbLignesRencontrees = $nbLignesRencontrees "
+
+}
+
 header() {						#Affichage de l'en-tête de la BD
 
-tput cup 2 5  ; echo -e "${bgBlanc}${fgNoir}NUM. COMMANDE${enDefaut}"
-tput cup 2 24 ; echo -e "${bgBlanc}${fgNoir}NOM CLIENT${enDefaut}"
-tput cup 2 50 ; echo -e "${bgBlanc}${fgNoir}ID. CLIENT${enDefaut}"
-tput cup 2 66 ; echo -e "${bgBlanc}${fgNoir}QUANTITÉS${enDefaut}"
-tput cup 2 81 ; echo -e "${bgBlanc}${fgNoir}ARTICLES${enDefaut}"
+tput cup 3 5  ; echo -e "${bgBlanc}${fgNoir}NUM. COMMANDE${enDefaut}"
+tput cup 3 24 ; echo -e "${bgBlanc}${fgNoir}NOM CLIENT${enDefaut}"
+tput cup 3 50 ; echo -e "${bgBlanc}${fgNoir}ID. CLIENT${enDefaut}"
+tput cup 3 66 ; echo -e "${bgBlanc}${fgNoir}QUANTITÉS${enDefaut}"
+tput cup 3 81 ; echo -e "${bgBlanc}${fgNoir}ARTICLES${enDefaut}"
 
 }
 
 bottom() {						#Affichage du bas de page de la BD (entre les entrées et le menu)
 
-tput cup 20 5 ; echo -e "${fgVert}[-] Changer de page [+]${enDefaut}          Page actuelle : $(($varDefilement/15+1)) / $nbPagesBD"
+tput cup 21 5 ; echo -e "${fgVert}[-] Changer de page [+]${enDefaut}          Page actuelle : $pageActuelle / $nbPagesBD"
 
 }
 
@@ -229,9 +240,9 @@ menuSelectionModeAffichage() {				#Menu pour choisir le mode d'affichage
 tput cup 22 0   ; echo -e "                                                                "
 tput cup 25 5   ; echo "                                                           "
 
-tput cup 22 5   ; echo -e "${bgBlanc}${fgNoir}Rechercher des lignes selon un mode voulu (entrez le caractère associé) :${enDefaut}"
-tput cup 23 5   ; echo -e "[0] Mode 0     [1] Mode 1     [2] Mode 2     [3] Mode 3     [4] Mode 4     [Q] Quitter"
-tput cup 23 95 ;
+tput cup 23 5   ; echo -e "${bgBlanc}${fgNoir}Rechercher des lignes selon un mode voulu (entrez le caractère associé) :${enDefaut}"
+tput cup 24 5   ; echo -e "[0] Mode 0     [1] Mode 1     [2] Mode 2     [3] Mode 3     [4] Mode 4     [Q] Quitter"
+tput cup 24 95 ;
 
 getToucheMenuFiltrage ;
 
@@ -239,11 +250,9 @@ getToucheMenuFiltrage ;
 
 affichage() {						#Affichage de l'intégralité des infos que l'utilisateur doit voir
 
-modifDynamiqueNbLignesAffichees ;			#Appel à la fonction de calcul de nbLignesAffichees
+clear ;
 
-tput cup 0 0 ; echo -e "${fgBlanc}${bgViolet}Infos développeur :${enDefaut} nbLignesBD = $nbLignesBD ; nbLignesAffichees = $nbLignesAffichees ; varDefilement = $varDefilement ; reste = $reste "
-
-tput cup 1 0 ; echo -e "${fgBlanc}${bgViolet}Infos développeur :${enDefaut} nbLignesRencontrees = $nbLignesRencontrees ; nbPages = $nbPagesBD Page actuelle = $pageActuelle "
+affichageInfosDev ;
 
 header ;						#Appel de l'header contenant les noms des données, pour affichage
 
@@ -251,13 +260,12 @@ for (( y=4 ; y<=$(($nbLignesAffichees+4)) ; y++ )) do	#Rafraîchissement de la z
 	tput cup $y 5 ; echo -e "                                                                                                    "
 done
 
-for (( a=1 ; a<=$(($nbLignesAffichees)) ; a++ )) do
-	tput cup $(($a+3)) 5  ; echo $(grep -G '^l'$(($a+$varDefilement))x $filenameBD | cut -d \; -f 4)
-	tput cup $(($a+3)) 24 ; echo $(grep -G '^l'$(($a+$varDefilement))x $filenameBD | cut -d \; -f 3)
-	tput cup $(($a+3)) 50 ; echo $(grep -G '^l'$(($a+$varDefilement))x $filenameBD | cut -d \; -f 2)
-	tput cup $(($a+3)) 66 ; echo $(grep -G '^l'$(($a+$varDefilement))x $filenameBD | cut -d \; -f 5)
-	tput cup $(($a+3)) 81 ; echo $(grep -G '^l'$(($a+$varDefilement))x $filenameBD | cut -d \; -f 6)
-	tput cup 20 0 ;
+for (( a=$(( $(( $(( $pageActuelle-1 )) * $nbLignesAffichees )) +1 )) ; a<=$(( $pageActuelle * $nbLignesAffichees )) ; a++ )) do
+		tput cup $(($a+4-$(($pageActuelle-1))*15)) 5  ; echo $(grep -G '^l'$(($a))x $filenameBD | cut -d \; -f 4)
+		tput cup $(($a+4-$(($pageActuelle-1))*15)) 24 ; echo $(grep -G '^l'$(($a))x $filenameBD | cut -d \; -f 3)
+		tput cup $(($a+4-$(($pageActuelle-1))*15)) 50 ; echo $(grep -G '^l'$(($a))x $filenameBD | cut -d \; -f 2)
+		tput cup $(($a+4-$(($pageActuelle-1))*15)) 66 ; echo $(grep -G '^l'$(($a))x $filenameBD | cut -d \; -f 5)
+		tput cup $(($a+4-$(($pageActuelle-1))*15)) 81 ; echo $(grep -G '^l'$(($a))x $filenameBD | cut -d \; -f 6)
 done
 
 bottom ;
