@@ -17,7 +17,7 @@ Nomenclature et fonctionnement :
 
   'X' : Une certaine fonctionnalité aura son propre digit dans le numéro de version.
   Ne pas confondre une fonctionnalité et une fonction du code ! La fonctionnalité peut être le système d'affichage,
-  le système de menu, d'édition, etc...
+  le système de menu, d'édition, etc, qui peut se retrouver sur plusieurs fonctions (généralement le cas)...
 
   'Y' : Une certaine partie du code (cette fois ci, une fonction dans le code, généralement).
   Ce chiffre n'est en rien révélateur de son importance, ou de sa place dans le code.
@@ -26,36 +26,47 @@ Nomenclature et fonctionnement :
 
   '/r' : Un message envers l'utilisateur, comme par exemple :	'/i'  : instable
   								'/s'  : stable
-								'/d'  : en développement
 								'/s+' : Support à long terme (durée pas encore définie)
-								'/t'  : test ouvert
+								'/d'  : en développement
 
 -----------------------------------------------------------------------------------------------
 
 Liste des versions (publiées ou non, ainsi que leur signification) :
 
-v0.0.0.0 :	Lancement du projet à l'écrit
-v0.1.0.0 :	Paramétrages bidons (entête script)
-v0.2.0.0 :	Paramétrages non-importants : initFenêtre
-v0.3.0.0 :	Paramétrages non-importants : definitionCouleurs
-v0.4.0.0 :	Paramétrages importants : nbLignesEntrees
-v0.4.0.5 :	+ Refonte plus "intelligente" du système de recherche du nombre de lignes
-v0.5.1.0 :	Paramétrages importants : Affichage header
-v0.5.2.0 :	Paramétrages importants : Affichage bottom
-v0.5.3.0 :	Paramétrages importants : Affichage menu affichage
-v0.5.4.0 :	Paramétrages importants : Affichage lignes de données
-v0.5.4.5/d :	+ Refonte affichage des lignes avec le tableau associatif (v0.7.9)
-v0.6.0.0 :	Paramétrages importants : Menu getTouche
-v0.7.1.0 :	Système de défilement des données : initVarDefilementEtNbLignesAffichees
-v0.7.2.0 :	Système de défilement des données : calcul du défilement (cœur du système)
-v0.7.3.0 :	Système de défilement des données : affichages infos Developpeur : syst.Défilement
-v0.7.4.0 :	Système de défilement des données : Application des variables
-v0.7.5.0 :	Système de défilement des données : Affichage en termes de pages de données
-v0.7.6.0 :	Système de défilement des données : Calcul de la page actuelle (que lit l'utilisateur)
-v0.7.7.0 :	Système de défilement des données : Stop défilement quand pages min ou max atteinte
-v0.7.7.1 :	+ Correctif LD26 pour compatibilité du code de la v0.7.8.0
+v0.0.0.0 :	Lancement du projet - Préparatifs (création des fichiers locaux, du dépôt Github, organisation sur le papier du projet)
 
-v0.7.8.0/d :	Système de défilement des données : Gestion affichage du reste des lignes (nofullpage)
-v0.7.9.0/d :	Gestion des lignes de données dans un tableau, afin d'obtenir un affichage correct, en lien avec la v0.7.8
+v0.1.0.0 :	Paramétrages bidons : en-tête script
+
+v0.2.0.0 :	Paramétrages non-importants
+v0.2.1.0 :	-- initFenetre()
+v0.2.2.0 :	-- definitionCouleur
+
+v0.3.0.0 :	Paramétrages importants
+v0.3.1.0 :	-- nbLignesBD() - Reconnaissance du nombre de LD
+v0.3.1.1 :	   -- Correctif de syntaxe pour une optimisation et un code plus explicite
+
+v0.4.0.0 :	Système de traitement des LD sous forme de tableau
+v0.4.1.0 :	Déclaration du tableau
+v0.4.2.0 :	Stockage de toutes les données dans le tableau, grâce à des variables de boucles
+
+v0.5.0.0 :	Système d'affichage
+v0.5.1.0 :	Header
+v0.5.2.0 :	Bottom
+v0.5.3.0 :	Menu utilisateur (dont élements dynamique)
+v0.5.4.0 :	Lignes de données (chaque élément du tableau réprésentant un champ d'une ligne)
+
+v0.6.0.0 :	Système de défilement des LD
+v0.6.1.0 :	initVarDefilementEtNbLignesAffichees()
+v0.6.2.0 :	calculNbPages() - Concept de pages
+v0.6.3.0 :	modifDynamiqueNbLignesAffichees() - Reconnaissance "Page pleine/Page Partielle"
+v0.6.4.0 :	Actions du défilement via le menu utilisateur
+v0.6.5.0 :	Gestion du reste de LD s'il n'est pas suffisant pour remplir une page (débugage de l'affichage)
+v0.6.6.0 :	Arrêt du défilement si page min ou max atteinte
+
+Versions futures en actuel développement:
+
+v0.7.x.x :	Système de filtrage et d'affichage des LD filtrées
+v0.8.x.x :	Système d'édition des LD
+v0.9.x.x :	Système d'ajout ou de suppression de LD
 
 -----------------------------------------------------------------------------------------------
