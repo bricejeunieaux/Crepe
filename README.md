@@ -1,5 +1,5 @@
 # CRÊPE - Une base de données manipulable en Bash
-##### Auteur : Brice Jeunieaux____________________Version actuelle : 0.7.7.1/i____________________Licence : GNU GPL v3
+##### Auteur : Brice Jeunieaux____________________Version actuelle : 0.7.0.0/s____________________Licence : GNU GPL v3
 ##### Date de début du projet : 24 Février 2018
 
 -----------------------------------------------------------------------------------------------
