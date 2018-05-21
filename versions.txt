@@ -19,7 +19,7 @@ Nomenclature et fonctionnement :
   Ne pas confondre une fonctionnalité et une fonction du code ! La fonctionnalité peut être le système d'affichage,
   le système de menu, d'édition, etc, qui peut se retrouver sur plusieurs fonctions (généralement le cas)...
 
-  'Y' : Une certaine partie du code (cette fois ci, une fonction dans le code, généralement).
+  'Y' : Une certaine partie du code (cette fois ci, une fonction dans le code, généralement, voire 2).
   Ce chiffre n'est en rien révélateur de son importance, ou de sa place dans le code.
 
   'Z' : Tout simplement un correctif appliqué à la fonction 'Y'.
@@ -28,45 +28,61 @@ Nomenclature et fonctionnement :
   								'/s'  : stable
 								'/s+' : Support à long terme (durée pas encore définie)
 								'/d'  : en développement
+								'/dpx' : en développement prioritaire (plus destiné à l'équipe de développement)
 
 -----------------------------------------------------------------------------------------------
 
 Liste des versions (publiées ou non, ainsi que leur signification) :
 
-v0.0.0.0 :	Lancement du projet - Préparatifs (création des fichiers locaux, du dépôt Github, organisation sur le papier du projet)
+v0.0.0.0	:	Lancement du projet - Préparatifs (création des fichiers locaux, du dépôt Github, organisation sur le papier du projet)
 
-v0.1.0.0 :	Paramétrages bidons : en-tête script
+v0.1.0.0	:	Paramétrages bidons : en-tête script
 
-v0.2.0.0 :	Paramétrages non-importants
-v0.2.1.0 :	-- initFenetre()
-v0.2.2.0 :	-- definitionCouleur
+v0.2.0.0	:	Paramétrages non-importants
+v0.2.1.0	:	-- initFenetre()
+v0.2.2.0	:	-- definitionCouleur
 
-v0.3.0.0 :	Paramétrages importants
-v0.3.1.0 :	-- nbLignesBD() - Reconnaissance du nombre de LD
-v0.3.1.1 :	   -- Correctif de syntaxe pour une optimisation et un code plus explicite
+v0.3.0.0	:	Paramétrages importants
+v0.3.1.0	:	-- nbLignesBD() - Reconnaissance du nombre de LD
+v0.3.1.1	:	   -- Correctif de syntaxe pour une optimisation et un code plus explicite
 
-v0.4.0.0 :	Système de traitement des LD sous forme de tableau
-v0.4.1.0 :	Déclaration du tableau
-v0.4.2.0 :	Stockage de toutes les données dans le tableau, grâce à des variables de boucles
+v0.4.0.0	:	Système de traitement des LD sous forme de tableau
+v0.4.1.0	:	-- Déclaration du tableau
+v0.4.2.0	:	-- Stockage de toutes les données dans le tableau, grâce à des variables de boucles
 
-v0.5.0.0 :	Système d'affichage
-v0.5.1.0 :	Header
-v0.5.2.0 :	Bottom
-v0.5.3.0 :	Menu utilisateur (dont élements dynamique)
-v0.5.4.0 :	Lignes de données (chaque élément du tableau réprésentant un champ d'une ligne)
+v0.5.0.0	:	Système d'affichage
+v0.5.1.0	:	-- Header
+v0.5.2.0	:	-- Bottom
+v0.5.2.1	:	   -- Modification mineure du bottom : affichage du nombre de LD + colorisation modifiée
+v0.5.3.0	:	-- Menu utilisateur (dont élements dynamiques)
+v0.5.3.1	:	   -- 
+v0.5.4.0	:	-- Lignes de données (chaque élément du tableau réprésentant un champ d'une ligne)
+v0.5.4.1/dp1	:	   -- Correctif : affichage correct lorsqu'il n'y a aucune LD dans la BD
+v0.5.5.0/dp2	:	-- Affichage des infos pour le développeur (activation et désactivation avec la touche 'œ' (puissance 2))
 
-v0.6.0.0 :	Système de défilement des LD
-v0.6.1.0 :	initVarDefilementEtNbLignesAffichees()
-v0.6.2.0 :	calculNbPages() - Concept de pages
-v0.6.3.0 :	modifDynamiqueNbLignesAffichees() - Reconnaissance "Page pleine/Page Partielle"
-v0.6.4.0 :	Actions du défilement via le menu utilisateur
-v0.6.5.0 :	Gestion du reste de LD s'il n'est pas suffisant pour remplir une page (débugage de l'affichage)
-v0.6.6.0 :	Arrêt du défilement si page min ou max atteinte
+v0.6.0.0	:	Système de défilement des LD
+v0.6.1.0	:	-- initVarDefilementEtNbLignesAffichees()
+v0.6.2.0	:	-- calculNbPages() - Concept de pages
+v0.6.3.0	:	-- modifDynamiqueNbLignesAffichees() - Reconnaissance "Page pleine/Page Partielle"
+v0.6.4.0	:	-- Actions du défilement via le menu utilisateur
+v0.6.4.1	:	   -- Ajout des touches fléchées pour le déplacement de l'utilisateur (les touches -/+ restent disponibles, en arrière-plan)
+v0.6.5.0	:	-- Gestion du reste de LD s'il n'est pas suffisant pour remplir une page (débugage de l'affichage)
+v0.6.6.0	:	-- Arrêt du défilement si page min ou max atteinte
 
-Versions futures en actuel développement:
+v0.7.0.0/d	:	Système de pointage de LD - En lien avec la v0.8.0.0
+v0.7.1.0	:	-- Mise en surbrillance d'une LD pointée
+v0.7.2.0	:	-- Défilement du pointage d'une LD (changement de surbrillance de la LD)
 
-v0.7.x.x :	Système de filtrage et d'affichage des LD filtrées
-v0.8.x.x :	Système d'édition des LD
-v0.9.x.x :	Système d'ajout ou de suppression de LD
+Versions futures :
+
+v0.8.0.0	:	Système d'édition de la LD en surbrillance - En lien avec la v0.7.0.0
+v0.8.1.0	:	-- Ouverture d'une fenêtre des détails en appuyant sur 'Entrée'
+v0.8.2.0	:	-- Menu utilisateur
+v0.8.3.0	:	-- Système d'édition de champs
+v0.8.4.0	:	-- Système de suppression totale de la LD
+
+v0.9.x.x	:	Système d'affichage filtré des LD
+
+v0.10.x.x	:	Traduction en anglais de tous les fichiers - Mise en dossier
 
 -----------------------------------------------------------------------------------------------
