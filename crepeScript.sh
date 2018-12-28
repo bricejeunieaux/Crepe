@@ -6,7 +6,7 @@
 #	 | |    | |__) | |__  | |__) | |__   	     #	#                                     		     #
 #	 | |    |  _  /|  __| |  ___/|  __|  	     #	#     Prototype actuel codé en script Bash Linux     #
 #	 | |____| | \ \| |____| |    | |____ 	     #	#                                     		     #
-#	  \_____|_|  \_\______|_|    |______|	     #	#             Version uploadée : 0.7.0.0             #
+#	  \_____|_|  \_\______|_|    |______|	     #	#             Version uploadée : 0.6.6.0             #
 #                                     		     #	#                                     		     #
 ######################################################	######################################################
 
@@ -26,7 +26,7 @@ initFenetre() {						#Dimensionnage fenêtre + effaçage
 resize -s 35 120
 clear
 
-echo "PRÉPARATION DE LA BASE DE DONNÉES..."		#Simple message inutile pour combler les 2 secondes de chargement au début
+echo "PRÉPARATION DE LA BASE DE DONNÉES \"CRÊPE\" (v0.6.6.0) ..."		#Simple message inutile pour combler les 2 secondes de chargement au début
 
 }
 
@@ -115,14 +115,6 @@ fi
 
 calculNbPages ;
 
-initTableauxLD() {						#Déclaration des tableaux contenants les données des LD.
-
-declare -A tab1 ;						#Tableau1 contenant les données du fichier .txt
-}
-
-initTableauxLD ;
-
-
 
 
 
@@ -132,6 +124,22 @@ initTableauxLD ;
 #####Pour cette partie, un commentaire est situé au début de chaque fonction pour rappeler à quelles fonctions elles sont rattachées
 #####
 #####Ces fonctions sont appelées de une à plusieurs fois au cours du programme : ainsi, elles sont essentielles à son fonctionnement
+
+declare -A tab ;						#Tableau1 contenant les données du fichier .txt
+
+traitementLDTab() {
+	
+	for (( a=1 ; a<=$nbPagesBD ; a++ )) do
+		for (( b=$(($((15*$(($a-1))))+1)) ; b<=$((15*$a)) ; b++ )) do
+			for (( c=2 ; c<=7 ; c++ )) do
+				tab["Page$a,LD$b,Champ$c"]=$(grep -G '^l'$(($b))x crepeBD.txt | cut -d \; -f $c)
+			done
+		done
+	done
+	
+}
+
+traitementLDTab ;
 
 defilement() {							#Fonction activable depuis le menu : défile les pages et en affiche les LD
 
@@ -165,21 +173,6 @@ defilement() {							#Fonction activable depuis le menu : défile les pages et e
 	fi
 	
 }
-
-traitementLDTab1() {
-	
-	for (( a=1 ; a<=$nbPagesBD ; a++ )) do
-		for (( b=$(($nbLignesAffichees*$(($a-1))+1)) ; b<=$(($nbLignesAffichees*$a)) ; b++ )) do
-			for (( c=2 ; c<=6 ; c++ )) do
-				tab2["Page$a,LD$b,Champ$c"]=$(grep -G '^l'$(($b))x crepeBD.txt | cut -d \; -f $c)
-  			done
-		done
-	done
-	
-}
-
-traitementLDTab1 ;
-
 
 
 
@@ -215,7 +208,8 @@ getToucheMenuFiltrage() {				#Gestion de la touche appuyée lors de fnctn select
 
 affichageInfosDev() {
 
-tput cup 0 0 ; echo -e "${fgBlanc}${bgViolet}Infos développeur :${enDefaut} nbLignesBD = $nbLignesBD ; nbLignesAffichees = $nbLignesAffichees ; nbPages = $nbPagesBD Page actuelle = $pageActuelle ; nbLignesRencontrees = $nbLignesRencontrees "
+tput cup 0 0 ; echo -e "${fgBlanc}${bgViolet}Infos développeur :${enDefaut} nbLignesBD = $nbLignesBD ; nbLignesAffichees = $nbLignesAffichees ; nbPages = $nbPagesBD Page actuelle = $pageActuelle ; nbLignesRencontrees = $nbLignesRencontrees " ;
+tput cup 1 0 ; echo -e "${fgBlanc}${bgViolet}Infos développeur :${enDefaut}" ;
 
 }
 
@@ -229,16 +223,23 @@ tput cup 3 81 ; echo -e "${bgBlanc}${fgNoir}ARTICLES${enDefaut}"
 
 }
 
-bottom() {						#Affichage du bas de page de la BD (entre les entrées et le menu)
+lignesDonnees() {					#Affichage des entrées de la BD
 
-tput cup 21 5 ; echo -e "${fgVert}[-] Changer de page [+]${enDefaut}          Page actuelle : $pageActuelle / $nbPagesBD"
+for (( b=$(($((15*$(($pageActuelle-1))))+1)) ; b<=$((15*$pageActuelle)) ; b++ )) do
+	for (( c=2 ; c<=7 ; c++ )) do
+		tput cup $(($b+4-$(($pageActuelle-1))*15)) 5 ; echo -e "${tab["Page$pageActuelle,LD$b,Champ4"]}" ;
+		tput cup $(($b+4-$(($pageActuelle-1))*15)) 24 ; echo -e "${tab["Page$pageActuelle,LD$b,Champ3"]}" ;
+		tput cup $(($b+4-$(($pageActuelle-1))*15)) 50 ; echo -e "${tab["Page$pageActuelle,LD$b,Champ2"]}" ;
+		tput cup $(($b+4-$(($pageActuelle-1))*15)) 66 ; echo -e "${tab["Page$pageActuelle,LD$b,Champ5"]}" ;
+		tput cup $(($b+4-$(($pageActuelle-1))*15)) 81 ; echo -e "${tab["Page$pageActuelle,LD$b,Champ6"]}" ;
+	done
+done
 
 }
 
 menuSelectionModeAffichage() {				#Menu pour choisir le mode d'affichage
 
-tput cup 22 0   ; echo -e "                                                                "
-tput cup 25 5   ; echo "                                                           "
+tput cup 21 5 ; echo -e "${fgVert}[-] Changer de page [+]${enDefaut}          Page actuelle : $pageActuelle / $nbPagesBD"
 
 tput cup 23 5   ; echo -e "${bgBlanc}${fgNoir}Rechercher des lignes selon un mode voulu (entrez le caractère associé) :${enDefaut}"
 tput cup 24 5   ; echo -e "[0] Mode 0     [1] Mode 1     [2] Mode 2     [3] Mode 3     [4] Mode 4     [Q] Quitter"
@@ -256,22 +257,11 @@ affichageInfosDev ;
 
 header ;						#Appel de l'header contenant les noms des données, pour affichage
 
-for (( y=4 ; y<=$(($nbLignesAffichees+4)) ; y++ )) do	#Rafraîchissement de la zone d'affichage des données
-	tput cup $y 5 ; echo -e "                                                                                                    "
-done
-
-for (( a=$(( $(( $(( $pageActuelle-1 )) * $nbLignesAffichees )) +1 )) ; a<=$(( $pageActuelle * $nbLignesAffichees )) ; a++ )) do
-		tput cup $(($a+4-$(($pageActuelle-1))*15)) 5  ; echo $(grep -G '^l'$(($a))x $filenameBD | cut -d \; -f 4)
-		tput cup $(($a+4-$(($pageActuelle-1))*15)) 24 ; echo $(grep -G '^l'$(($a))x $filenameBD | cut -d \; -f 3)
-		tput cup $(($a+4-$(($pageActuelle-1))*15)) 50 ; echo $(grep -G '^l'$(($a))x $filenameBD | cut -d \; -f 2)
-		tput cup $(($a+4-$(($pageActuelle-1))*15)) 66 ; echo $(grep -G '^l'$(($a))x $filenameBD | cut -d \; -f 5)
-		tput cup $(($a+4-$(($pageActuelle-1))*15)) 81 ; echo $(grep -G '^l'$(($a))x $filenameBD | cut -d \; -f 6)
-done
-
-bottom ;
+lignesDonnees ;
 
 menuSelectionModeAffichage ;
 
 }
 
 affichage ;
+
